@@ -132,10 +132,9 @@ async function handleSearchPage(params, requestQueue, maxPostCount, isAdvancedRe
             // if extended output fnction exists, apply it now.
             if (evaledFunc) result = await applyFunction($, evaledFunc, result);
 
-            else {
-                await Apify.pushData(result);
-                continue; // eslint-disable-line
-            }
+            await Apify.pushData(result);
+            continue; // eslint-disable-line
+
         }
 
         await requestQueue.addRequest({
