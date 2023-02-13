@@ -28,7 +28,10 @@ async function handleSearchPage(params, requestQueue, maxPostCount, isAdvancedRe
         });
     }
 
-
+    // limit the results to be scraped, if maxPostCount exists
+    if (maxPostCount) {
+        resultElements = resultElements.slice(0, maxPostCount);
+    }
 
     // for each result element, grab data and push it to results array
     resultElements.each(function (index) {
@@ -106,12 +109,9 @@ async function handleSearchPage(params, requestQueue, maxPostCount, isAdvancedRe
 
         results.push(output);
     });
-    // Properly limit the results to be scraped, if maxPostCount exists then if maxPostCount has been reached then stop processing
-    if (!maxPostCount) {
-        var maxPostCount = 500;
-    }
+
     // for each result, enqueue product page
-    for (let i = 0; i < maxPostCount | results.length; i++) {
+    for (let i = 0; i < results.length; i++) {
         let result = results[i];
 
         // If result does not contain shopping ID, then we cannot load product detail page, so directly output the item
@@ -134,7 +134,6 @@ async function handleSearchPage(params, requestQueue, maxPostCount, isAdvancedRe
 
             await Apify.pushData(result);
             continue; // eslint-disable-line
-
         }
 
         await requestQueue.addRequest({
